@@ -1,0 +1,32 @@
+version: '3.3'
+
+services:
+  web:
+    build: 
+      dockerfile: ./obs_mtp.dockerfile
+      context: .
+    command: python manage.py runserver 0.0.0.0:8000
+    image: agamenor/obsmtp
+    container_name: web_obsmtp
+    volumes:
+      - ./obs_mtp:/webapps
+    ports:
+      - "8000:8000"
+    networks: 
+      - production-network
+    depends_on:
+      - "mongodb"
+  mongodb:
+    image: mongo
+    volumes: 
+      - /home/aga/db:/data/db
+    networks: 
+      - production-network
+networks:
+    production-network:
+      driver: bridge
+
+#    links:
+#      - db
+#    depends_on:
+#      - db
