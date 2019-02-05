@@ -18,6 +18,7 @@ services:
       - "mongodb"
   mongodb:
     image: mongo
+    container_name: mongodb_obsmtp
     volumes: 
       - /home/aga/db:/data/db
     networks: 

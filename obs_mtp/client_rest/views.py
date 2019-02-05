@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from pymongo import MongoClient
 from datetime import datetime
+from apscheduler.schedulers.background import BackgroundScheduler
 
 import schedule
 import json
@@ -39,6 +40,7 @@ def index(request):
 	#schedule.every(1).minutes.do(gravaRegistro)
 	#schedule.every(5).seconds.do(gravaRegistro)#funcionou
 	#cron()
+	start()
 	return HttpResponse(rdata)
 
 def gravaRegistro():
@@ -48,4 +50,7 @@ def cron():
 	while True:
 		schedule.run_pending()
 		time.sleep(1)
-
+def start():
+	scheduler = BackgroundScheduler()
+	scheduler.add_job(gravaRegistro, 'interval', seconds=10)
+	scheduler.start()
