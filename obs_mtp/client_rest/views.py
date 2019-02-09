@@ -19,9 +19,10 @@ client = MongoClient('mongodb://mongodb:27017')
 db = client.obs_mtp
 
 def buscar_dados(request):
-	print('=====================')
-	iniciar_processo()
-	return render(request, 'sucesso.html')
+	total = str(db.registro_gps.count())
+	print('===================== ' + total )
+	#iniciar_processo()
+	return render(request, 'sucesso.html', {'total': total})
 
 
 def client2(request):
@@ -44,9 +45,6 @@ def client2(request):
 		#Define a collection a ser utilizada(se nao existir cria)
 		collection = db.registro_gps
 		collection.insert_one(registro)
-	#schedule.every(1).minutes.do(gravaRegistro)
-	#schedule.every(5).seconds.do(gravaRegistro)#funcionou
-	#cron()
 	#iniciar_processo()
 	return HttpResponse(rdata)
 
@@ -56,10 +54,6 @@ def index(request):
 def gravaRegistro():
 	print ('TIME EXECUTOU')
 
-def cron():
-	while True:
-		schedule.run_pending()
-		time.sleep(1)
 def iniciar_processo():
 	scheduler = BackgroundScheduler()
 	scheduler.add_job(gravaRegistro, 'interval', seconds=10)
