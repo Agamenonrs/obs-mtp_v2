@@ -3,12 +3,13 @@ from django.http import HttpResponse
 from pymongo import MongoClient
 from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
+from django.http import Http404
 
-import schedule
 import json
 import requests
 import time
 import pprint
+from bson.json_util import dumps
 
 
 # from django.http import HttpResponse
@@ -19,10 +20,13 @@ client = MongoClient('mongodb://mongodb:27017')
 db = client.obs_mtp
 
 def buscar_dados(request):
+	
 	total = str(db.registro_gps.count())
-	print('===================== ' + total )
+	data = dumps(db.registro_gps.find_one()) 
+	ultimo_registro = json.loads(data)
+	print('===================== ' + str(ultimo_registro['REGISTRO']))
 	#iniciar_processo()
-	return render(request, 'sucesso.html', {'total': total})
+	return render(request, 'sucesso.html', {'total': total, 'ultimo_registro' : ultimo_registro['REGISTRO'][1] })
 
 
 def client2(request):
