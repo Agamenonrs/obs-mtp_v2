@@ -18,7 +18,14 @@ client = MongoClient('mongodb://mongodb:27017')
 #Definine o database a ser utilizado
 db = client.obs_mtp
 
-def index(request):
+def client(request, question_id):
+	print('=====================')
+	iniciar_processo()
+	return render(request, 'sucesso.html')
+
+
+def client2(request):
+	print('=====================')
 	#url = 'http://dadosabertos.rio.rj.gov.br/apiTransporte/apresentacao/rest/index.cfm/obterPosicoesDaLinha/688'
 	url = 'http://dadosabertos.rio.rj.gov.br/apiTransporte/apresentacao/rest/index.cfm/obterTodasPosicoes'
 	resultado = ''
@@ -40,8 +47,11 @@ def index(request):
 	#schedule.every(1).minutes.do(gravaRegistro)
 	#schedule.every(5).seconds.do(gravaRegistro)#funcionou
 	#cron()
-	start()
+	#iniciar_processo()
 	return HttpResponse(rdata)
+
+def index(request):
+	return render(request, 'index.html')
 
 def gravaRegistro():
 	print ('TIME EXECUTOU')
@@ -50,7 +60,7 @@ def cron():
 	while True:
 		schedule.run_pending()
 		time.sleep(1)
-def start():
+def iniciar_processo():
 	scheduler = BackgroundScheduler()
 	scheduler.add_job(gravaRegistro, 'interval', seconds=10)
 	scheduler.start()
