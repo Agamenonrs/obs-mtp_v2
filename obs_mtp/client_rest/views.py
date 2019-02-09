@@ -18,7 +18,7 @@ client = MongoClient('mongodb://mongodb:27017')
 #Definine o database a ser utilizado
 db = client.obs_mtp
 
-def client(request, question_id):
+def buscar_dados(request):
 	print('=====================')
 	iniciar_processo()
 	return render(request, 'sucesso.html')
