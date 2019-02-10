@@ -26,11 +26,11 @@ def form_iniciar(request):
 def exibe_ultimo_registro(request):
 	
 	total = str(db.registro_gps.count())
-	data = dumps(db.registro_gps.find_one()) 
-	ultimo_registro = json.loads(data)
-	data_atualizacao = str(ultimo_registro['DATA_ATUALIZACAO'])
-	print('===================== ' + str( data_atualizacao))
-	return render(request, 'sucesso.html', {'total': total, 'ultimo_registro' : data_atualizacao })
+	data = db.registro_gps.aggregate([{'$group':{'_id': 1,'ultima_data':{'$max': '$DATA_ATUALIZACAO'}}}])
+	d = dumps(data)
+	ultimo_registro = json.loads(d)
+	print('===================== ' + str(ultimo_registro[0]['ultima_data']))
+	return render(request, 'sucesso.html', {'total': total, 'ultimo_registro' : str(ultimo_registro[0]['ultima_data']) })
 
 
 def buscar_dados(request):
